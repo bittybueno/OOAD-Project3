@@ -6,4 +6,6 @@
 ## Created using
 - Java, SDK 11, Intellj
 
-## For more info, see proj3.pdf.
+
+
+For more info, see proj3.pdf.
