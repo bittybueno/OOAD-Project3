@@ -1,3 +1,5 @@
+package MyUnitTest;
+
 import Customer.*;
 import HardwareRentalStore.HardwareRentalStore;
 import Rental.RentalRecord;
@@ -8,7 +10,6 @@ import Tools.ToolStore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Currency;
 
 import static org.junit.Assert.*;
 
@@ -32,13 +33,24 @@ public class MyUnitTest {
 
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void testCreateTool2() {
-        SimpleToolFactory toolFactory = new SimpleToolFactory();
-        ToolStore toolStore = new ToolStore(toolFactory);
+    @Test (expected = RuntimeException.class)
+    public void testCreateTool2()
+    {
+        try
+        {
+            SimpleToolFactory toolFactory = new SimpleToolFactory();
+            ToolStore toolStore = new ToolStore(toolFactory);
 
-        Tool tool = toolStore.createTool("Nonsense", "Test Name");
-
+            Tool tool = toolStore.createTool("Nonsense", "Test Name");        }
+        catch(RuntimeException re)
+        {
+            System.out.println("Test 2 - Passed");
+            System.out.println("       Exception caught ");
+            String message = "Invalid Input.";
+            assertEquals(message, re.getMessage());
+            throw re;
+        }
+        fail("Invalid input exception did not throw!");
     }
 
     @Test
@@ -117,10 +129,10 @@ public class MyUnitTest {
         try {
             assertEquals(0, availableTools.size());}
         catch (AssertionError e) {
-            System.out.println("Test 7 - Failed");
+            System.out.println("Test 6 - Failed");
             throw e;
         }
-        System.out.println("Test 7 - Passed");
+        System.out.println("Test 6 - Passed");
     }
 
     @Test
@@ -143,10 +155,10 @@ public class MyUnitTest {
         try {
             assertEquals(2, availableTools.size());}
         catch (AssertionError e) {
-            System.out.println("Test 6 - Failed");
+            System.out.println("Test 7 - Failed");
             throw e;
         }
-        System.out.println("Test 6 - Passed");
+        System.out.println("Test 7 - Passed");
     }
 
     @Test
@@ -202,9 +214,22 @@ public class MyUnitTest {
         System.out.println("Test 9 - Passed");
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void testEmptyName() {
-        Customer customer = new Business("");
+    @Test (expected = RuntimeException.class)
+    public void testEmptyName2()
+    {
+        try
+        {
+            Customer customer = new Business("");
+        }
+        catch(RuntimeException re)
+        {
+            System.out.println("Test 10 - Passed");
+            System.out.println("       Exception caught ");
+            String message = "No inputted name.";
+            assertEquals(message, re.getMessage());
+            throw re;
+        }
+        fail("No inputted name exception did not throw!");
     }
 
 }

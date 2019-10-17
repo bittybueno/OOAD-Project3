@@ -4,6 +4,9 @@ import Customer.*;
 import Rental.*;
 import Tools.*;
 import java.math.*;
+import MyUnitTest.*;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +68,7 @@ public class HardwareRentalStore {
     }
 
     public ArrayList<Tool> createTools(){
+        // SIMPLY FACTORY PATTERN
         SimpleToolFactory toolFactory = new SimpleToolFactory();
         ToolStore toolStore = new ToolStore(toolFactory);
 
@@ -99,6 +103,7 @@ public class HardwareRentalStore {
     }
 
     public void updateInventoryRent(ArrayList<Tool> rentedToolsNoDec) {
+        // update inventory when a rental transaction has occured
         for (Tool tool : rentedToolsNoDec) {
             int i = this.tools.indexOf(tool);
             this.tools.get(i).setInStock(false);
@@ -106,6 +111,7 @@ public class HardwareRentalStore {
     }
 
     public void updateInventoryReturn(ArrayList<Tool> rentedToolsNoDec) {
+        // update inventory when a rental has expired
         for (Tool tool : rentedToolsNoDec) {
             int i = this.tools.indexOf(tool);
             this.tools.get(i).setInStock(true);
@@ -113,6 +119,8 @@ public class HardwareRentalStore {
     }
 
     public ArrayList<Tool> availableTools() {
+        // iterate through tools and gather an ArrayList
+        // of which tools are available to rent
         ArrayList<Tool> availableTools = new ArrayList<Tool>();
         for (Tool tool : this.tools) {
             if (tool.inStock == true) {
@@ -143,12 +151,19 @@ public class HardwareRentalStore {
 
     public double customerSimulation(ArrayList<Customer> customersArr) {
 
+        // to keep track of which rentals returned
         ArrayList<RentalRecord> temp = new ArrayList<RentalRecord>();
+
+        // selecting random number of customers
         Random rand = new Random();
 
+        // to display count of rentals at the end of each day
         int active = 0;
         int returned = 0;
 
+
+        // ITERATOR DESIGN PATTERN
+        // used to iterate through every customer for each day
         Iterator<Customer> it = customersArr.iterator();
         while (it.hasNext()) {
             Customer customer = it.next();
@@ -164,6 +179,10 @@ public class HardwareRentalStore {
             }
         }
 
+        // ITERATOR DESIGN PATTERN & FACADE
+        // iterate through rentals to remove expired rentals from active rentals list
+        // and trigger an expiredRental() which calls a number of different methods
+        // on different classes to update (FACADE)
         Iterator<RentalRecord> itRent = temp.iterator();
         while (itRent.hasNext()) {
             RentalRecord rental = itRent.next();
@@ -176,8 +195,13 @@ public class HardwareRentalStore {
         // random number of visitors
         int r = (int) (Math.random() * (customersArr.size() - 1)) + 1;
 
+        // to keep track of each daily profit
         double totalProfit = 0.0;
 
+        // If there is inventory and the customer has less than 3 active rentals
+        // complete a rental transaction. If not, skip.
+        // A FACADE is used on the  update() method which calls a number of different methods
+        // on different classes to update
         for (int i = 0; i < r; i++) {
             if (this.availableTools().size() == 0) {
                 System.out.println("\n------ Empty Inventory ------ ");
@@ -196,6 +220,8 @@ public class HardwareRentalStore {
                 }
             }
         }
+
+        // display
         System.out.println("Active Rentals: " + active);
         System.out.println("Returned Rentals: " + returned);
         this.printInventory();
@@ -213,9 +239,11 @@ public class HardwareRentalStore {
     }
 
     public void daySimulaiton(ArrayList<Customer> customersArr) {
+        // formatting purposes
         DecimalFormat df = new DecimalFormat("####.##");
         df.setRoundingMode(RoundingMode.DOWN);
 
+        // cycle through each day
         double monthlyProfit = 0.0;
         for (int i = 1; i <=35; i++) {
             System.out.println("\n\n ********************** DAY " + i + " **********************\n\n");
@@ -232,14 +260,20 @@ public class HardwareRentalStore {
 
     public static void main(String[] args) {
 
+        // EXTRA CREDIT JUNIT TESTS
+        MyUnitTest myUnitTest = new MyUnitTest();
+        JUnitCore junit = new JUnitCore();
+        Result result = junit.run(MyUnitTest.class);
 
+        // SET UP
         HardwareRentalStore hardwareRentalStore = new HardwareRentalStore();
-
         hardwareRentalStore.createTools();
-
         ArrayList<Customer> customersArr = hardwareRentalStore.createCustomers();
 
+        // SIMULATION
         hardwareRentalStore.daySimulaiton(customersArr);
+
+
 
 
     }

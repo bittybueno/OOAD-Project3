@@ -2,6 +2,8 @@ package Tools;
 
 public class SimpleToolFactory {
 
+        // encapsulate the creation of a tool
+
         public Tool createTool(String type, String name) {
         Tool tool = null;
         if (type.equals("Painting")) {
@@ -20,8 +22,7 @@ public class SimpleToolFactory {
                 tool = new YardworkTool(name);
         }
         else {
-            System.out.println("Invalid Input.");
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid Input.");
         }
         return tool;
     }
